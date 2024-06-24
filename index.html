@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배구 전략 및 플레이어 포지션 시뮬레이터</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #scoreboard {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px auto;
+            width: 600px;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .score {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        #court {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            background-color: #fff;
+            border: 1px solid #000;
+            margin: 20px auto;
+        }
+
+        .net {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #000;
+            top: 50%;
+        }
+
+        .player {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ffcc00;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+        }
+
+        .opponent {
+            background-color: #00ccff;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>배구 전략 및 플레이어 포지션 시뮬레이터</h1>
+    <div id="scoreboard">
+        <div class="team">
+            <h2>팀 1</h2>
+            <div class="score" id="team1Score">0</div>
+            <button onclick="increaseScore('team1')">+</button>
+            <button onclick="decreaseScore('team1')">-</button>
+        </div>
+        <div class="team">
+            <h2>팀 2</h2>
+            <div class="score" id="team2Score">0</div>
+            <button onclick="increaseScore('team2')">+</button>
+            <button onclick="decreaseScore('team2')">-</button>
+        </div>
+    </div>
+    <div id="court">
+        <div class="net"></div>
+        <!-- 상단 플레이어 -->
+        <div class="player" id="player1" draggable="true" ondragstart="drag(event)" style="left: 100px; top: 50px;">1</div>
+        <div class="player" id="player2" draggable="true" ondragstart="drag(event)" style="left: 200px; top: 50px;">2</div>
+        <div class="player" id="player3" draggable="true" ondragstart="drag(event)" style="left: 300px; top: 50px;">3</div>
+        <!-- 하단 플레이어 -->
+        <div class="player" id="player4" draggable="true" ondragstart="drag(event)" style="left: 100px; top: 250px;">4</div>
+        <div class="player" id="player5" draggable="true" ondragstart="drag(event)" style="left: 200px; top: 250px;">5</div>
+        <div class="player" id="player6" draggable="true" ondragstart="drag(event)" style="left: 300px; top: 250px;">6</div>
+
+        <!-- 상단 상대팀 -->
+        <div class="player opponent" id="opponent1" draggable="true" ondragstart="drag(event)" style="left: 100px; top: 100px;">A</div>
+        <div class="player opponent" id="opponent2" draggable="true" ondragstart="drag(event)" style="left: 200px; top: 100px;">B</div>
+        <div class="player opponent" id="opponent3" draggable="true" ondragstart="drag(event)" style="left: 300px; top: 100px;">C</div>
+        <!-- 하단 상대팀 -->
+        <div class="player opponent" id="opponent4" draggable="true" ondragstart="drag(event)" style="left: 100px; top: 350px;">D</div>
+        <div class="player opponent" id="opponent5" draggable="true" ondragstart="drag(event)" style="left: 200px; top: 350px;">E</div>
+        <div class="player opponent" id="opponent6" draggable="true" ondragstart="drag(event)" style="left: 300px; top: 350px;">F</div>
+    </div>
+    <button onclick="resetPositions()">포지션 리셋</button>
+    <script>
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        document.getElementById("court").ondragover = function (event) {
+            event.preventDefault();
+        };
+
+        document.getElementById("court").ondrop = function (event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            var player = document.getElementById(data);
+            var rect = event.target.getBoundingClientRect();
+            var x = event.clientX - rect.left - player.offsetWidth / 2;
+            var y = event.clientY - rect.top - player.offsetHeight / 2;
+            player.style.left = x + "px";
+            player.style.top = y + "px";
+        };
+
+        function resetPositions() {
+            // 상단 플레이어 리셋
+            document.getElementById('player1').style.left = '100px';
+            document.getElementById('player1').style.top = '50px';
+            document.getElementById('player2').style.left = '200px';
+            document.getElementById('player2').style.top = '50px';
+            document.getElementById('player3').style.left = '300px';
+            document.getElementById('player3').style.top = '50px';
+
+            // 하단 플레이어 리셋
+            document.getElementById('player4').style.left = '100px';
+            document.getElementById('player4').style.top = '250px';
+            document.getElementById('player5').style.left = '200px';
+            document.getElementById('player5').style.top = '250px';
+            document.getElementById('player6').style.left = '300px';
+            document.getElementById('player6').style.top = '250px';
+
+            // 상단 상대팀 리셋
+            document.getElementById('opponent1').style.left = '100px';
+            document.getElementById('opponent1').style.top = '100px';
+            document.getElementById('opponent2').style.left = '200px';
+            document.getElementById('opponent2').style.top = '100px';
+            document.getElementById('opponent3').style.left = '300px';
+            document.getElementById('opponent3').style.top = '100px';
+
+            // 하단 상대팀 리셋
+            document.getElementById('opponent4').style.left = '100px';
+            document.getElementById('opponent4').style.top = '350px';
+            document.getElementById('opponent5').style.left = '200px';
+            document.getElementById('opponent5').style.top = '350px';
+            document.getElementById('opponent6').style.left = '300px';
+            document.getElementById('opponent6').style.top = '350px';
+        }
+
+        function increaseScore(team) {
+            var scoreElement = document.getElementById(team + 'Score');
+            var score = parseInt(scoreElement.textContent);
+            scoreElement.textContent = score + 1;
+        }
+
+        function decreaseScore(team) {
+            var scoreElement = document.getElementById(team + 'Score');
+            var score = parseInt(scoreElement.textContent);
+            if (score > 0) {
+                scoreElement.textContent = score - 1;
+            }
+        }
+    </script>
+</body>
+
+</html>
